@@ -54,7 +54,7 @@ pub async fn discover_models(
                 break;
             }
             Ok(_) => continue,
-            Err(tokio_modbus::Exception::IllegalDataAddress) => continue,
+            Err(tokio_modbus::ExceptionCode::IllegalDataAddress) => continue,
             Err(e) => return Err(CommunicationError::from_modbus_exception(e).into()),
         }
     }
@@ -204,5 +204,5 @@ pub enum TokioModbusError {
     Error(#[from] tokio_modbus::Error),
     /// tokio-modbus server exception
     #[error(transparent)]
-    Exception(#[from] tokio_modbus::Exception),
+    Exception(#[from] tokio_modbus::ExceptionCode),
 }

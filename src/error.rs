@@ -12,16 +12,16 @@ pub enum CommunicationError {
     Timeout,
     /// Implementation specific modbus error
     #[cfg(feature = "tokio-modbus")]
-    #[error("Modbus")]
-    Modbus(#[from] TokioModbusError),
+    #[error(transparent)]
+    TokioModbus(#[from] TokioModbusError),
 }
 
 #[cfg(feature = "tokio-modbus")]
 impl CommunicationError {
     pub(crate) fn from_modbus_error(e: tokio_modbus::Error) -> Self {
-        Self::Modbus(TokioModbusError::Error(e))
+        Self::TokioModbus(TokioModbusError::Error(e))
     }
-    pub(crate) fn from_modbus_exception(e: tokio_modbus::Exception) -> Self {
-        Self::Modbus(TokioModbusError::Exception(e))
+    pub(crate) fn from_modbus_exception(e: tokio_modbus::ExceptionCode) -> Self {
+        Self::TokioModbus(TokioModbusError::Exception(e))
     }
 }
